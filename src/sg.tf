@@ -11,6 +11,16 @@ resource "aws_security_group" "sg" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
+  /*ingress {
+    description = "VPC"
+    from_port   = 31000
+    to_port     = 31000
+    protocol    = "tcp"
+    # Continuar em 01:57:27
+    cidr_blocks = [aws_eks_cluster.eks_cluster.endpoint]
+    # || aws_eks_cluster.eks_cluster.vpc_config[0].endpoint_public_access || "172.31.0.0/16"
+  }*/
+
   egress {
     description = "All"
     from_port   = 0
