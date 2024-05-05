@@ -124,6 +124,7 @@ jobs:
 
       - name: Terraform Apply
         run: terraform apply -auto-approve
+        continue-on-error: true
 
       - name: Wait for destroy (AWS Academy)
         id: destroy
