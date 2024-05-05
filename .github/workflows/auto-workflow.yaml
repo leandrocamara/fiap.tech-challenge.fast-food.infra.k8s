@@ -1,4 +1,4 @@
-name: Workflow
+name: Auto Workflow
 
 on:
   push:

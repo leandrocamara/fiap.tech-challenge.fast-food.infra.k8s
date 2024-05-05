@@ -1,4 +1,4 @@
-name: Apply/Destroy
+name: Manual Apply/Destroy
 
 on:
   workflow_dispatch:
@@ -11,6 +11,12 @@ on:
         description: 'Terraform Destroy'
         required: false
         default: 'no'
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
 
 env:
   TF_ACTION_WORKING_DIR: "./src/"
