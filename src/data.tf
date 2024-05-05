@@ -17,7 +17,3 @@ data "aws_subnets" "default" {
 data "aws_iam_role" "labRole" {
   name = "LabRole"
 }
-
-data "aws_iam_role" "principalArn" {
-  name = "voclabs"
-}
