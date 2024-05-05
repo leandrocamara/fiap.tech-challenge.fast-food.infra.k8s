@@ -116,6 +116,8 @@ jobs:
     defaults:
       run:
         working-directory: ${{ env.TF_ACTION_WORKING_DIR }}
+    permissions:
+      issues: write
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
@@ -126,22 +128,19 @@ jobs:
       - name: Terraform Init
         run: terraform init
 
-      - name: Wait Test
-        id: wait
-        run: echo "Waiting for approval"
-
-      - name: Terraform Plan
-        if: steps.wait.outputs.result == 'approved'
-        run: terraform plan -no-color
-
       # - name: Terraform Apply
-      #   if: steps.wait.outputs.result == 'approved'
       #   run: terraform apply -auto-approve
 
-      # - name: Wait for destroy (AWS Academy)
-      #   id: destroy
-      #   run: echo "Waiting for approval to destroy"
+      - uses: trstringer/manual-approval@v1
+        with:
+          secret: ${{ github.TOKEN }}
+          approvers: leandrocamara
+          minimum-approvals: 1
+          issue-title: "$ terraform destroy"
+          issue-body: "Approve to undo `$ terraform apply` (#${{ github.event.number }})"
 
-      - name: Terraform Destroy
-        # if: steps.destroy.outputs.result == 'approved'
-        run: terraform destroy -auto-approve
+      - name: Terraform Plan
+        run: terraform plan -no-color
+
+      # - name: Terraform Destroy
+      #   run: terraform destroy -auto-approve
