@@ -1,0 +1,44 @@
+name: Apply/Destroy
+
+on:
+  workflow_dispatch:
+    inputs:
+      apply:
+        description: 'Terraform Apply'
+        required: false
+        default: 'no'
+      destroy:
+        description: 'Terraform Destroy'
+        required: false
+        default: 'no'
+
+env:
+  TF_ACTION_WORKING_DIR: "./src/"
+  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  AWS_SESSION_TOKEN: ${{ secrets.AWS_SESSION_TOKEN }}
+
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    if: github.event.inputs.apply == 'yes' # && github.ref == 'refs/heads/main'
+    defaults:
+      run:
+        working-directory: ${{ env.TF_ACTION_WORKING_DIR }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: hashicorp/setup-terraform@v3
+      - run: terraform init
+      - run: terraform apply -auto-approve
+
+  destroy:
+    runs-on: ubuntu-latest
+    if: github.event.inputs.destroy == 'yes' # && github.ref == 'refs/heads/main'
+    defaults:
+      run:
+        working-directory: ${{ env.TF_ACTION_WORKING_DIR }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: hashicorp/setup-terraform@v3
+      - run: terraform init
+      - run: terraform destroy -auto-approve
