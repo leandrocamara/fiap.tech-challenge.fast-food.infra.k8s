@@ -109,11 +109,11 @@ jobs:
     runs-on: ubuntu-latest
     # if: github.ref == 'refs/heads/main'
     steps:
-      - name: Use files from job1
-        run: ls $GITHUB_WORKSPACE
-
       - name: Checkout Repository
         uses: actions/checkout@v4
+
+      - name: Use files from job1
+        run: ls $GITHUB_WORKSPACE
 
       - name: Terraform Apply
         run: terraform apply -auto-approve
