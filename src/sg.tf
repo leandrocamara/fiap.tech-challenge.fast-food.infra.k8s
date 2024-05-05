@@ -1,7 +1,7 @@
 resource "aws_security_group" "sg" {
   name        = "SG-${var.projectName}"
   description = "This group is used AWS EKS"
-  vpc_id      = var.vpcId
+  vpc_id      = data.aws_vpc.default.id
 
   ingress {
     description = "All"
