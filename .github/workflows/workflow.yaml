@@ -123,3 +123,11 @@ jobs:
 
       - name: Terraform Apply
         run: terraform apply -auto-approve
+
+      - name: Wait for destroy (AWS Academy)
+        id: destroy
+        run: echo "Waiting for approval to destroy"
+
+      - name: Terraform Destroy
+        if: steps.destroy.outputs.result == 'approved'
+        run: terraform destroy -auto-approve
