@@ -138,6 +138,11 @@ jobs:
           minimum-approvals: 1
           issue-title: "$ terraform destroy"
           issue-body: "Approve to undo `$ terraform apply` (#${{ github.event.number }})"
+          timeout-minutes: 60
+        env:
+          AWS_ACCESS_KEY_ID: ''
+          AWS_SECRET_ACCESS_KEY: ''
+          AWS_SESSION_TOKEN: ''
 
       - name: Terraform Plan
         run: terraform plan -no-color
