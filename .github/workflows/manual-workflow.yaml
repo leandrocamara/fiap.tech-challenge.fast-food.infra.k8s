@@ -1,0 +1,47 @@
+name: Manual Deployment
+
+on:
+  workflow_dispatch:
+    inputs:
+      timeoutForDestroyApproval:
+        description: 'Timeout (in minutes) for Destroy approval'
+        required: false
+        default: 60
+        type: number
+
+env:
+  TF_ACTION_WORKING_DIR: "./src/"
+  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  AWS_SESSION_TOKEN: ${{ secrets.AWS_SESSION_TOKEN }}
+
+jobs:
+  CD:
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    defaults:
+      run:
+        working-directory: ${{ env.TF_ACTION_WORKING_DIR }}
+    permissions:
+      issues: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: hashicorp/setup-terraform@v3
+      - run: terraform init
+      - run: terraform apply -auto-approve
+
+      - uses: trstringer/manual-approval@v1
+        timeout-minutes: ${{ github.event.inputs.timeoutForDestroyApproval }}
+        with:
+          secret: ${{ github.TOKEN }}
+          approvers: leandrocamara # TODO: Add other approvers
+          minimum-approvals: 1
+          issue-title: "$ terraform destroy"
+          issue-body: "Approve to undo manual `$ terraform apply`"
+        env:
+          AWS_ACCESS_KEY_ID: ""
+          AWS_SECRET_ACCESS_KEY: ""
+          AWS_SESSION_TOKEN: ""
+
+      - name: Terraform Destroy
+        run: terraform destroy -auto-approve
