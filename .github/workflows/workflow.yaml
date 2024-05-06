@@ -112,7 +112,7 @@ jobs:
   CD:
     needs: CI
     runs-on: ubuntu-latest
-    # if: github.ref == 'refs/heads/main'
+    if: github.ref == 'refs/heads/main'
     defaults:
       run:
         working-directory: ${{ env.TF_ACTION_WORKING_DIR }}
@@ -135,7 +135,7 @@ jobs:
         timeout-minutes: 60
         with:
           secret: ${{ github.TOKEN }}
-          approvers: leandrocamara
+          approvers: leandrocamara # TODO: Add other approvers
           minimum-approvals: 1
           issue-title: "$ terraform destroy"
           issue-body: "Approve to undo `$ terraform apply` (#${{ github.event.number }})"
