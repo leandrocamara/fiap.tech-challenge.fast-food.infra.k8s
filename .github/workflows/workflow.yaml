@@ -23,6 +23,20 @@ jobs:
     permissions:
       pull-requests: write
     steps:
+      # Approvers Test
+      - uses: trstringer/manual-approval@v1
+        timeout-minutes: 60
+        with:
+          secret: ${{ github.TOKEN }}
+          approvers: DaniloQueirozSilva,eltonds88,leandrocamara,mpatricio007
+          minimum-approvals: 1
+          issue-title: "$ Approvers Test"
+          issue-body: "Approvers Test"
+        env:
+          AWS_ACCESS_KEY_ID: ""
+          AWS_SECRET_ACCESS_KEY: ""
+          AWS_SESSION_TOKEN: ""
+
       - name: Checkout Repository
         uses: actions/checkout@v4
 
